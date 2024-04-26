@@ -7,15 +7,15 @@ A simple and minimalistic todo list app. With mobile compatibility.
 
 *A lot of funcitonality still needs to be added:*
 
-* -[ ] Editing Todos*
+* -[ ] Editing Todos
 
-* -[ ] UI updating when todo is completed*
+* -[ ] UI updating when todo is completed
 
-* -[ ] Login/Signup for user to access todos*
+* -[ ] Login/Signup for user to access todos
 
-* -[ ] Todos saved to database (mongoDB) so user can access accross different devices*
+* -[ ] Todos saved to database (mongoDB) so user can access accross different devices
 
-* -[ ] Todo filtering by category, time*
+* -[ ] Todo filtering by category, time
 ---
 Image as of 28/01/24
 

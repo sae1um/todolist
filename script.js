@@ -1,64 +1,89 @@
-const todoList = [{todo: "Do the Dishes", date: "20-11-2024", id: 1},{todo: "clean car", date: "20-11-2024", id: 2}];
+const todoList = [
+    { todo: "Do the Dishes", date: "20-11-2024", complete: false, id: 1 },
+    { todo: "clean car", date: "20-11-2024", complete: false, id: 2 }
+];
 let todo;
 let date;
 let id;
 loadTodos();
 
-document.getElementById("todoItems").addEventListener("click", (event) => {
+//Listen for button that is clicked (Delete, Checkbox, Edit)
+document.getElementById("todoItems").addEventListener("click", () => {
+    const todoDiv = event.target.closest("div");
+    const divID = parseInt(todoDiv.dataset.id);
     if (event.target.id === "delete") {
-        // console.log("Delete Cliked");
-        const todoDiv = event.target.closest("div");
-        const divID = parseInt(todoDiv.dataset.id);
+        deleteToDo(todoDiv, divID);
+    } else if (event.target.id === "checkbox") {
+        toDochecked(todoDiv, divID);
+    } else if (event.target.id === "edit"){
+        editTodo(todoDiv, divID);
+    }
+});
 
-        for(i = todoList.length - 1; i >= 0; i--){
-            index = todoList.length - 1; 
-            let foundID = todoList[i].id;
-            // console.log("divID",divID, "foundID", foundID);
-            // console.log(typeof divID, typeof foundID);
-            if(divID === foundID){
-                todoList.splice(i, 1);
-                todoDiv.remove();
-                alert("Todo has been deleted");
+//Delete todo that is clicked
+function deleteToDo(todoDiv, divID) {
+    for (i = todoList.length - 1; i >= 0; i--) {
+        let foundID = todoList[i].id;
+        if (divID === foundID) {
+            todoList.splice(i, 1);
+            todoDiv.remove();
+            alert("Todo has been deleted");
+        }
+    }
+}
+
+//When ToDo is checked, style is applied, .complete value set to true
+function toDochecked(todoDiv, divID) {
+    let spans = todoDiv.querySelectorAll("span");
+    let checkBox = todoDiv.querySelector("input");
+    //Loop through TodoList to find the one that was clicked
+    for (i = todoList.length - 1; i >= 0; i--) {
+        let foundID = todoList[i].id;
+        if (divID === foundID) {
+            if (checkBox.checked) {
+                spans.forEach(span => {
+                    span.style.textDecoration = "line-through";
+                });
+                todoList[i].complete = true;
+            } else if (!checkBox.checked) {
+                spans.forEach(span => {
+                    span.style.textDecoration = "none";
+                });
+                todoList[i].complete = false;
             }
         }
     }
-    // console.log("delete not clicked") 
-});
+}
 
-document.getElementById("addBtn").addEventListener("click", addToArray = () => {
+//Add new todo to TodoList Array => Update Function is called
+document.getElementById("addBtn").addEventListener("click", () => {
     todo = document.getElementById("addNewBox").value;
     date = document.getElementById("date").value;
-    if((todo === "") || (date === "")){
+    if ((todo === "") || (date === "")) {
         alert("Fill in all the fields")
         return;
-    }else{
+    } else {
         let element = todoList.length - 1;
-        if(todoList.length === 0){
-            todoList.push({todo: todo, date: date, id: id = 1});
+        if (todoList.length === 0) {
+            todoList.push({ todo: todo, date: date, complete: false, id: id = 1 });
             updateScreen(todo, date, id);
-        }else{
+        } else {
             let lastID = todoList[element].id;
-            todoList.push({todo: todo, date: date, id: id = lastID + 1});
-            
+            todoList.push({ todo: todo, date: date, complete: false, id: id = lastID + 1 });
+
             console.log(id);
             updateScreen(todo, date, id);
         }
     }
-    
-    //Debugging
-    // console.log("button clicked");
-    // element++;
-    // console.log(todoList[element].id);
-    // console.log(date);
 });
-//updates new todo to the screen
-const updateScreen = (todo, date, id) => {
+
+//Updates new todo to the screen
+function updateScreen(todo, date, id) {
     document.getElementById("addNewBox").value = "";
     document.getElementById("date").value = "";
     let updateHTML = `
-            <div data-id="${id}">    
+            <div data-id="${id}">
             <input type="checkbox" id="checkbox">
-            <input type="checkbox" name="" id="checkbox">
                 <span id="todo">
                     ${todo}
                 </span>
@@ -69,16 +94,16 @@ const updateScreen = (todo, date, id) => {
                 <button data-id="${id}" id="delete"><i class="fa-solid fa-trash fa-lg" style="color: #ffffff;"></i></button>
             </div>
         `;
-        let listDiv = document.getElementById("todoItems");
-        listDiv.innerHTML += updateHTML;
+    let listDiv = document.getElementById("todoItems");
+    listDiv.innerHTML += updateHTML;
 }
 
 //Loads todos already in the array on refresh
-function loadTodos(){
+function loadTodos() {
     todoList.forEach((element) => {
         let updateHTML = `
             <div data-id="${element.id}">   
-                <input type="checkbox" name="" id="checkbox">  
+                <input type="checkbox" id="checkbox">  
                 <span id="todo">
                     ${element.todo}
                 </span>
@@ -92,7 +117,14 @@ function loadTodos(){
         let listDiv = document.getElementById("todoItems");
         listDiv.innerHTML += updateHTML;
     });
+}
 
-    // console.log(element);
-    // console.log(todoList);
+function editTodo(todoDiv, divID){
+    for (i = todoList.length - 1; i >= 0; i--) {
+        let foundID = todoList[i].id;
+        if (divID === foundID) {
+            
+            console.log("Edit the todo");
+        }
+    }
 }
