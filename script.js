@@ -5,7 +5,14 @@ const todoList = [
 let todo;
 let date;
 let id;
+let currentDiv;
+// let globalInput;
+
+let span = document.getElementsByClassName("close")[0];
+let modal = document.getElementById("myModal");
+
 loadTodos();
+
 
 //Listen for button that is clicked (Delete, Checkbox, Edit)
 document.getElementById("todoItems").addEventListener("click", () => {
@@ -15,7 +22,7 @@ document.getElementById("todoItems").addEventListener("click", () => {
         deleteToDo(todoDiv, divID);
     } else if (event.target.id === "checkbox") {
         toDochecked(todoDiv, divID);
-    } else if (event.target.id === "edit"){
+    } else if (event.target.id === "edit") {
         editTodo(todoDiv, divID);
     }
 });
@@ -59,7 +66,8 @@ function toDochecked(todoDiv, divID) {
 document.getElementById("addBtn").addEventListener("click", () => {
     todo = document.getElementById("addNewBox").value;
     date = document.getElementById("date").value;
-    if ((todo === "") || (date === "")) {
+
+    if (todo.trim() == "") {
         alert("Fill in all the fields")
         return;
     } else {
@@ -69,7 +77,7 @@ document.getElementById("addBtn").addEventListener("click", () => {
             updateScreen(todo, date, id);
         } else {
             let lastID = todoList[element].id;
-            todoList.push({ todo: todo, date: date, complete: false, id: id = lastID + 1 });
+            todoList.push({ todo: todo, date: date, complete: false, id: id = lastID++ });
 
             console.log(id);
             updateScreen(todo, date, id);
@@ -100,6 +108,8 @@ function updateScreen(todo, date, id) {
 
 //Loads todos already in the array on refresh
 function loadTodos() {
+    let listDiv = document.getElementById("todoItems");
+    listDiv.innerHTML = "";
     todoList.forEach((element) => {
         let updateHTML = `
             <div data-id="${element.id}">   
@@ -114,17 +124,49 @@ function loadTodos() {
                 <button data-id="${element.id}" id="delete"><i class="fa-solid fa-trash fa-lg" style="color: #ffffff;"></i></button>
             </div>
         `;
-        let listDiv = document.getElementById("todoItems");
         listDiv.innerHTML += updateHTML;
     });
+    console.log("all todos loaded");
 }
 
-function editTodo(todoDiv, divID){
+function editTodo(todoDiv, divID) {
+    document.getElementById("myModal").style.display = "block";
+    todoInput = document.getElementById("edit-input");
+    dateInput = document.getElementById("date-input");
+    currentDiv = divID;
     for (i = todoList.length - 1; i >= 0; i--) {
         let foundID = todoList[i].id;
         if (divID === foundID) {
-            
-            console.log("Edit the todo");
+            todoInput.value = todoList[i].todo;
+            // dateInput.value = todoList[i].date;
         }
     }
+}
+
+//Listen for save button press
+document.getElementById("save-edit").addEventListener("click", () => {
+    console.log("clicked");
+    for(i = todoList.length - 1; i >= 0; i--){
+        let listID = todoList[i].id;
+        if(currentDiv === listID){
+            let element = todoList[i];
+            input = document.getElementById("edit-input").value;
+            date = document.getElementById("date-input").value;
+            element.todo = input;
+            loadTodos();
+            console.log("updated", todoList[i]);
+
+        }
+    }
+    document.getElementById("myModal").style.display = "none";
+});
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+span.onclick = function() {
+    modal.style.display = "none";
 }

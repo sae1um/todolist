@@ -1,3 +1,5 @@
 Mongo dets:
     sae1um
     NTQQt1GBP0bIG8ik
+
+make the date editteable
